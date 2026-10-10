@@ -18,7 +18,7 @@ env/
 *.p12
 *.pfx
 secrets/
-
+PROJECT.TXT
 # Runtime databases, checkpoint files, and local data
 data/*
 !data/.gitkeep
