@@ -1,0 +1,69 @@
+# Python bytecode and interpreter caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Local environment configuration and credentials
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+secrets/
+
+# Runtime databases, checkpoint files, and local data
+data/*
+!data/.gitkeep
+!data/uploads/
+data/uploads/*
+!data/uploads/.gitkeep
+*.sqlite
+*.sqlite3
+*.sqlite-shm
+*.sqlite-wal
+*.db
+*.db-shm
+*.db-wal
+.chroma_db/
+
+# Uploaded medical documents and generated files
+uploads/*
+!uploads/.gitkeep
+*.log
+*.tmp
+*.temp
+
+# Test and coverage output
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# Type-checker and linter caches
+.mypy_cache/
+.pyright/
+.ruff_cache/
+.tox/
+.nox/
+
+# Build and package output
+build/
+dist/
+*.egg-info/
+
+# Front-end dependencies and generated output
+node_modules/
+
+# Operating-system metadata
+.DS_Store
+Thumbs.db
+Desktop.ini

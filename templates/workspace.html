@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SwasthyaSaar | {{ title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='css/workspace.css') }}?v=20261010-document-delete">
+</head>
+<body>
+    <div class="workspace-shell">
+        <aside class="workspace-sidebar">
+            <a class="workspace-brand" href="/">
+                <span class="brand-mark">+</span>
+                <span><strong>SwasthyaSaar</strong><small>Your health, organized</small></span>
+            </a>
+            <nav aria-label="Main navigation">
+                <a href="/">Dashboard</a>
+                <a href="/profile" {% if page == "profile" or page == "profile-edit" %}aria-current="page"{% endif %}>My profile</a>
+                <a href="/lab-reports" {% if page == "lab-reports" %}aria-current="page"{% endif %}>Lab reports</a>
+                <a href="/medications" {% if page == "medications" %}aria-current="page"{% endif %}>Medications</a>
+                <a href="/documents" {% if page == "documents" %}aria-current="page"{% endif %}>Documents</a>
+                <a href="/symptom-summary" {% if page == "symptom-summary" %}aria-current="page"{% endif %}>Symptom summary</a>
+                <a href="/safety-alerts" {% if page == "safety-alerts" %}aria-current="page"{% endif %}>Safety alerts</a>
+            </nav>
+            <button class="secondary-button logout-button" id="logout-button" type="button">Sign out</button>
+        </aside>
+
+        <main class="workspace-main" data-workspace-page="{{ page }}">
+            <header class="workspace-header">
+                <div>
+                    <a class="back-link" href="/">← Dashboard</a>
+                    <h1>{{ title }}</h1>
+                    <p>Personal health information from your account and uploaded records.</p>
+                </div>
+            </header>
+
+            <div id="workspace-message" class="message" role="status" aria-live="polite"></div>
+
+            {% if page == "profile" %}
+            <section class="panel">
+                <div class="panel-heading">
+                    <div><h2>Personal details</h2><p>Review the profile information used by your health record tools.</p></div>
+                    <a class="primary-button" href="/profile/edit">Update profile</a>
+                </div>
+                <dl id="profile-details" class="detail-grid"><div class="loading">Loading profile…</div></dl>
+            </section>
+            <section class="profile-security">
+                <details class="password-disclosure">
+                    <summary>
+                        <span>Change password</span>
+                        <span class="password-disclosure-hint">Account security</span>
+                    </summary>
+                    <div class="password-panel">
+                        <p>Choose a strong password that you do not use for other accounts.</p>
+                        <form id="password-form" class="form-grid">
+                            <label>New password
+                                <input name="password" type="password" autocomplete="new-password" minlength="8" required>
+                            </label>
+                            <label>Confirm new password
+                                <input name="confirm_password" type="password" autocomplete="new-password" minlength="8" required>
+                            </label>
+                            <div class="form-actions wide-field">
+                                <button class="primary-button" type="submit">Update password</button>
+                            </div>
+                        </form>
+                    </div>
+                </details>
+            </section>
+            {% elif page == "profile-edit" %}
+            <section class="panel">
+                <div class="panel-heading"><div><h2>Edit your details</h2><p>Changes apply to your personal profile only.</p></div></div>
+                <form id="profile-form" class="form-grid">
+                    <label>Name<input name="name" autocomplete="name" required maxlength="255"></label>
+                    <label>Year of birth<input name="year_of_birth" type="number" min="1900" max="2100" inputmode="numeric"></label>
+                    <label>Blood group<input name="blood_group" maxlength="10"></label>
+                    <label>Phone number<input name="phone_number" type="tel" autocomplete="tel" maxlength="20"></label>
+                    <label class="wide-field">Medical conditions<textarea name="medical_condition" rows="3"></textarea></label>
+                    <label class="wide-field">Allergies<textarea name="allergy" rows="3"></textarea></label>
+                    <div class="form-actions wide-field">
+                        <a class="secondary-button" href="/profile">Cancel</a>
+                        <button class="primary-button" type="submit">Save profile</button>
+                    </div>
+                </form>
+            </section>
+            {% elif page == "lab-reports" %}
+            <section class="panel">
+                <div class="panel-heading"><div><h2>Parsed lab reports</h2><p>Values extracted from your uploaded lab reports. Confirm important results with your clinician.</p></div></div>
+                <div id="lab-reports-list" class="record-list"><div class="loading">Loading lab reports…</div></div>
+            </section>
+            {% elif page == "medications" %}
+            <section class="panel">
+                <div class="panel-heading"><div><h2>Medication records</h2><p>Medications recorded from your health records.</p></div>
+                    <label class="filter-label">Filter
+                        <select id="medication-status">
+                            <option value="ALL">All statuses</option>
+                            <option value="ACTIVE">Active</option>
+                            <option value="COMPLETED">Completed</option>
+                            <option value="STOPPED">Stopped</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="table-scroll">
+                    <table><thead><tr><th>Medication</th><th>Status</th><th>Start date</th><th>End date</th><th>Ingredients</th></tr></thead>
+                        <tbody id="medications-list"><tr><td colspan="5" class="loading">Loading medications…</td></tr></tbody>
+                    </table>
+                </div>
+                <p class="clinical-note">This list may be incomplete. Verify current medicines and doses with your care team.</p>
+            </section>
+            {% elif page == "documents" %}
+            <section class="panel">
+                <div class="panel-heading"><div><h2>Upload a medical document</h2><p>Choose the document type so the existing parser can process it correctly.</p></div></div>
+                <form id="document-form" class="upload-form">
+                    <label>Document type
+                        <select name="doc_type" required>
+                            <option value="PRESCRIPTION">Prescription</option>
+                            <option value="LAB_REPORT">Lab report</option>
+                        </select>
+                    </label>
+                    <label>File (PDF, image, DOCX, or TXT)
+                        <input name="file" type="file" accept=".pdf,.png,.jpg,.jpeg,.docx,.txt" required>
+                    </label>
+                    <button class="primary-button" type="submit">Upload and process</button>
+                </form>
+                <div id="document-upload-progress" class="document-upload-progress hidden" role="status" aria-live="polite">
+                    <progress aria-label="Document processing in progress"></progress>
+                    <p id="document-upload-progress-message"></p>
+                </div>
+                <p class="clinical-note">Only upload records you are authorized to share. Extracted information can contain errors; review it before relying on it.</p>
+            </section>
+            <section class="panel">
+                <div class="panel-heading"><div><h2>Your documents</h2><p>Processing status and parsed details for your uploads.</p></div></div>
+                <div id="documents-list" class="record-list"><div class="loading">Loading documents…</div></div>
+            </section>
+            {% elif page == "symptom-summary" %}
+            <section class="panel summary-intro">
+                <div class="summary-intro-icon" aria-hidden="true">✚</div>
+                <div>
+                    <p class="summary-eyebrow">GUIDED HEALTH INTERVIEW</p>
+                    <h2>Tell us what you’re experiencing</h2>
+                    <p>The assistant will ask one question at a time and organize your answers into a summary for your clinician.</p>
+                </div>
+            </section>
+            <div class="notice summary-notice" role="note">
+                <strong>Not for emergencies or diagnosis.</strong>
+                If you may be experiencing a medical emergency, seek urgent medical help now. The summary can be incomplete; review it with a qualified clinician.
+            </div>
+            <section class="panel summary-panel">
+                <div class="summary-toolbar">
+                    <label class="filter-label">Spoken language
+                        <select id="speech-language">
+                            <option value="en-IN">English</option>
+                            <option value="hi-IN">Hindi / Hinglish</option>
+                        </select>
+                    </label>
+                    <label class="voice-toggle">
+                        <input id="auto-speak" type="checkbox" checked>
+                        Read questions aloud
+                    </label>
+                    <button class="secondary-button" id="stop-speaking" type="button" disabled>Stop speaking</button>
+                    <button class="primary-button" id="start-interview" type="button">Start guided interview</button>
+                </div>
+                <div id="summary-status" class="summary-status" role="status" aria-live="polite">
+                    Start when you’re ready. You can speak or type your answers.
+                </div>
+                <div id="emergency-notice" class="emergency-notice hidden" role="alert"></div>
+                <div id="summary-conversation" class="summary-conversation hidden" aria-live="polite"></div>
+                <section id="question-panel" class="summary-answer-panel hidden">
+                    <h3 id="summary-question" class="visually-hidden"></h3>
+                    <form id="answer-form">
+                        <label class="answer-label" for="summary-answer">Your answer</label>
+                        <textarea id="summary-answer" rows="3" placeholder="Type your answer here…" autocomplete="off" required></textarea>
+                        <div class="answer-actions">
+                            <div class="speech-actions">
+                                <button class="secondary-button" id="repeat-question" type="button" disabled>🔊 Repeat question</button>
+                                <button class="secondary-button" id="start-listening" type="button">🎙 Speak answer</button>
+                                <span id="speech-support" class="support-note"></span>
+                            </div>
+                            <label class="voice-toggle auto-submit-toggle">
+                                <input id="auto-submit-speech" type="checkbox" checked>
+                                Send recognized speech automatically
+                            </label>
+                            <button class="primary-button send-answer-button" type="submit">Send answer</button>
+                        </div>
+                    </form>
+                </section>
+                <section id="summary-report-panel" class="summary-report hidden">
+                    <div class="report-heading">
+                        <div><p class="summary-eyebrow">READY TO REVIEW</p><h2>Symptom summary</h2></div>
+                        <button class="secondary-button" id="read-report" type="button">🔊 Read summary</button>
+                    </div>
+                    <div id="summary-report" class="report-content"></div>
+                    <p class="clinical-note">Check every detail for accuracy before sharing this report. It is not a diagnosis or a substitute for medical advice.</p>
+                    <button class="secondary-button" id="download-current-summary" type="button" data-summary-download>Download / Print PDF</button>
+                    <button class="primary-button" id="restart-interview" type="button">Start another interview</button>
+                </section>
+            </section>
+            <section class="panel">
+                <div class="panel-heading">
+                    <div><h2>Saved Symptom Summaries</h2><p>Completed reports remain available here and on your dashboard.</p></div>
+                </div>
+                <div id="workspace-summary-reports" class="record-list summary-report-history" data-summary-reports>
+                    <div class="loading">Loading saved symptom summaries…</div>
+                </div>
+            </section>
+            {% elif page == "safety-alerts" %}
+            <section class="panel safety-caveat">
+                <h2>Medication screening is limited</h2>
+                <p>These results reflect only safety checks that were recorded for uploaded prescriptions and the patient/medication information available to the configured screening pipeline. Missing checks or no detected conflicts do not prove that a medicine is safe. Confirm medicines and concerns with a qualified clinician or pharmacist.</p>
+            </section>
+            <section class="panel">
+                <div class="panel-heading"><div><h2>Recorded safety assessments</h2><p>Assessments are shown separately from actionable findings.</p></div></div>
+                <div id="safety-assessments" class="record-list"><div class="loading">Loading safety assessments…</div></div>
+            </section>
+            <section class="panel">
+                <div class="panel-heading"><div><h2>Findings requiring attention</h2><p>Only recorded conflicts and critical findings appear here.</p></div></div>
+                <div id="safety-alerts" class="record-list"><div class="loading">Loading findings…</div></div>
+            </section>
+            <section class="panel">
+                <div class="panel-heading"><div><h2>Lab results flagged for review</h2><p>Flags are reported from uploaded lab documents and are not a diagnosis.</p></div></div>
+                <div id="lab-result-alerts" class="record-list"><div class="loading">Loading flagged lab results…</div></div>
+            </section>
+            {% endif %}
+
+            <footer class="workspace-footer">
+                Health information shown here is based on records available in this application; it may be incomplete or inaccurate.
+            </footer>
+        </main>
+    </div>
+    <script>
+        window.SWASTHYASAAR_WORKSPACE = {
+            page: {{ page | tojson }},
+            endpoints: {{ api_endpoints | tojson }}
+        };
+    </script>
+    <script src="{{ url_for('static', path='js/patient_summary_reports.js') }}"></script>
+    <script src="{{ url_for('static', path='js/workspace.js') }}?v=20261010-document-delete"></script>
+</body>
+</html>

@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SwasthyaSaar | Dashboard</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/dashboard.css') }}?v=20261010-document-cards"
+    >
+</head>
+
+<body>
+
+<div class="app-shell">
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-mark">
+                ✚
+            </div>
+
+            <div>
+                <div class="brand-name">
+                    Swasthya<span>Saar</span>
+                </div>
+
+                <div class="brand-tagline">
+                    Your Health, Our Priority
+                </div>
+            </div>
+
+        </div>
+
+
+        <nav class="nav">
+
+            <a class="nav-item active" href="/">
+                ⌂
+                <span>Dashboard</span>
+            </a>
+
+            <a class="nav-item" href="/profile">
+                ♙
+                <span>My Profile</span>
+            </a>
+
+            <a class="nav-item" href="/lab-reports">
+                ♧
+                <span>Lab Reports</span>
+            </a>
+
+            <a class="nav-item" href="/medications">
+                ◈
+                <span>Medications</span>
+            </a>
+
+            <a class="nav-item" href="/documents">
+                ▤
+                <span>Documents</span>
+            </a>
+
+            <a class="nav-item" href="/symptom-summary">
+                ☊
+                <span>Symptom Summary</span>
+            </a>
+
+            <a class="nav-item" href="/safety-alerts">
+
+                ⚠
+
+                <span>
+                    Safety Alerts
+                </span>
+
+                <b id="alertBadge">
+                    0
+                </b>
+
+            </a>
+
+        </nav>
+
+
+        <!-- Safety box -->
+
+        <div class="sidebar-safe">
+
+            <div class="safe-icon">
+                ✓
+            </div>
+
+            <h3>
+                Stay Safe
+            </h3>
+
+            <p>
+                Review medication and lab safety alerts
+                from your health records.
+            </p>
+
+            <button
+                class="light-btn"
+                data-section="alerts"
+            >
+                View Alerts →
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="main">
+
+
+        <!-- ================= TOP BAR ================= -->
+
+        <header class="topbar">
+
+            <div class="search-box">
+
+                <span>
+                    ⌕
+                </span>
+
+                <input
+                    id="globalSearch"
+                    type="search"
+                    placeholder="Search reports, medicines, tests..."
+                >
+
+            </div>
+
+
+            <div class="top-actions">
+
+                <button
+                    class="icon-btn"
+                    title="Notifications"
+                >
+                    ♧
+
+                    <span
+                        class="notification-dot"
+                        id="notificationDot"
+                    >
+                        0
+                    </span>
+
+                </button>
+
+
+                <div class="user-mini">
+
+                    <div
+                        class="avatar"
+                        id="avatarLetter"
+                    >
+                        U
+                    </div>
+
+                    <div>
+
+                        <strong id="headerUserName">
+                            User
+                        </strong>
+
+                        <small>
+                            Patient
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- ================= CONTENT ================= -->
+
+        <section
+            class="content"
+            id="dashboard"
+        >
+
+
+            <!-- Welcome -->
+
+            <div class="welcome-row">
+
+                <div>
+
+                    <h1>
+                        Welcome back,
+                        <span id="welcomeName">
+                            User
+                        </span>!
+                    </h1>
+
+                    <p>
+                        Here is your health overview and latest updates.
+                    </p>
+
+                </div>
+
+
+                <div class="account-status">
+                    ● Active Account
+                </div>
+
+            </div>
+
+
+
+            <!-- ================= FEATURE CARDS ================= -->
+
+            <div class="feature-grid">
+
+
+                <!-- Profile -->
+
+                <article class="feature-card blue">
+
+                    <div class="feature-icon">
+                        ♙
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Profile
+                        </h3>
+
+                        <p>
+                            View and update your personal details.
+                        </p>
+
+                        <a class="outline-btn" href="/profile">
+                            View Profile →
+                        </a>
+
+                    </div>
+
+                </article>
+
+
+                <!-- Patient Summary -->
+
+                <article class="feature-card green">
+
+                    <div class="feature-icon">
+                        ▣
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Patient Summary
+                        </h3>
+
+                        <p>
+                            Get an AI-powered symptom summary.
+                        </p>
+
+                        <a class="outline-btn" href="/symptom-summary">
+                            Start Interview →
+                        </a>
+
+                    </div>
+
+                </article>
+
+
+                <!-- Lab Reports -->
+
+                <article class="feature-card purple">
+
+                    <div class="feature-icon">
+                        ⚗
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Lab Reports
+                        </h3>
+
+                        <p>
+                            View your test results and trends.
+                        </p>
+
+                        <a class="outline-btn" href="/lab-reports">
+                            View Reports →
+                        </a>
+
+                    </div>
+
+                </article>
+
+
+                <!-- Medications -->
+
+                <article class="feature-card orange">
+
+                    <div class="feature-icon">
+                        ◈
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Medications
+                        </h3>
+
+                        <p>
+                            Track your medicines and status.
+                        </p>
+
+                        <a class="outline-btn" href="/medications">
+                            View Medications →
+                        </a>
+
+                    </div>
+
+                </article>
+
+            </div>
+
+
+
+            <!-- ================= DASHBOARD GRID ================= -->
+
+            <div class="dashboard-grid">
+
+
+                <!-- ================= LAB GRAPH ================= -->
+
+                <section
+                    class="card lab-card"
+                    id="lab-reports"
+                >
+
+                    <div class="card-head">
+
+                        <div>
+
+                            <h2>
+                                Lab Test Trends
+                            </h2>
+
+                            <p>
+                                Historical numeric results from your lab reports.
+                            </p>
+
+                        </div>
+
+
+                        <select id="labTestSelect">
+                        </select>
+
+                    </div>
+
+
+                    <div class="chart-wrap">
+
+                        <canvas
+                            id="labChart"
+                        ></canvas>
+
+                        <div
+                            id="labEmpty"
+                            class="empty-state hidden"
+                        >
+                            No numeric lab results available.
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+
+                <!-- ================= MEDICATIONS ================= -->
+
+                <section
+                    class="card medication-card"
+                    id="medications"
+                >
+
+                    <div class="card-head">
+
+                        <div>
+
+                            <h2>
+                                Medications
+                            </h2>
+
+                            <p>
+                                Active records and medicines extracted from prescriptions.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <p class="medication-record-note">
+                        Prescription-only entries are extracted from uploaded documents and do not confirm that you currently take the medicine. Verify names, doses, and current use with your clinician or pharmacist.
+                    </p>
+
+
+                    <!-- FILTERS -->
+
+                    <div
+                        class="filter-row"
+                        id="medicationFilters"
+                    >
+
+                        <button
+                            class="filter active"
+                            data-status="ALL"
+                        >
+                            All
+                        </button>
+
+                        <button
+                            class="filter"
+                            data-status="ACTIVE"
+                        >
+                            Active
+                        </button>
+
+                        <button
+                            class="filter"
+                            data-status="COMPLETED"
+                        >
+                            Completed
+                        </button>
+
+                        <button
+                            class="filter"
+                            data-status="STOPPED"
+                        >
+                            Closed
+                        </button>
+
+                    </div>
+
+
+                    <!-- SEARCH -->
+
+                    <div class="search-small">
+
+                        <span>
+                            ⌕
+                        </span>
+
+                        <input
+                            id="medicationSearch"
+                            type="search"
+                            placeholder="Search medications..."
+                        >
+
+                    </div>
+
+
+                    <!-- TABLE -->
+
+                    <div class="table-scroll">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        Medicine
+                                    </th>
+
+                                    <th>
+                                        Dose / ingredients
+                                    </th>
+
+                                    <th>
+                                        Status
+                                    </th>
+
+                                    <th>
+                                        Start Date
+                                    </th>
+
+                                    <th>
+                                        End Date
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody
+                                id="medicationTableBody"
+                            >
+
+                                <tr>
+
+                                    <td
+                                        colspan="5"
+                                        class="loading"
+                                    >
+                                        Loading medications...
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </section>
+
+
+
+                <!-- ================= SAFETY ALERTS ================= -->
+
+                <section
+                    class="card alerts-card"
+                    id="alerts"
+                >
+
+                    <div class="card-head">
+
+                        <h2>
+                            Safety Alerts
+                        </h2>
+
+                    </div>
+
+
+                    <div id="alertsList">
+
+                        <div class="loading">
+                            Loading alerts...
+                        </div>
+
+                    </div>
+
+                    <div class="lab-alert-heading">
+                        <h3>Lab results flagged for review</h3>
+                        <p>These flags come from the parsed report and are not a diagnosis.</p>
+                    </div>
+                    <div id="labAlertsList">
+                        <div class="loading">Checking flagged lab results...</div>
+                    </div>
+
+                </section>
+
+
+
+                <!-- ================= DOCUMENTS ================= -->
+
+                <section
+                    class="card documents-card"
+                    id="documents"
+                >
+
+                    <div class="card-head">
+
+                        <div>
+
+                            <h2>
+                                Recent Medical Documents
+                            </h2>
+
+                            <p>
+                                Review the status of your uploaded health records.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div id="documentTableBody" class="dashboard-document-list">
+                        <div class="loading">Loading documents...</div>
+                    </div>
+
+                </section>
+
+
+
+                <!-- ================= QUICK ACTIONS ================= -->
+
+                <section class="card quick-card">
+
+                    <div class="card-head">
+
+                        <h2>
+                            Quick Links
+                        </h2>
+
+                    </div>
+
+
+                    <div class="quick-grid">
+
+
+                        <button
+                            class="quick-action upload"
+                            id="uploadDocumentBtn"
+                        >
+
+                            <span>
+                                ⇧
+                            </span>
+
+                            <strong>
+                                Upload Document
+                            </strong>
+
+                            <small>
+                                Add your medical files
+                            </small>
+
+                        </button>
+
+
+                        <a class="quick-action parsed" href="/documents">
+                            <span>
+                                ▣
+                            </span>
+
+                            <strong>
+                                View Medical Documents
+                            </strong>
+
+                            <small>
+                                Review uploaded and processed records
+                            </small>
+                        </a>
+
+                        <a class="quick-action safety" href="/safety-alerts">
+                            <span aria-hidden="true">!</span>
+                            <strong>Review Safety Alerts</strong>
+                            <small>Check available medication and record alerts</small>
+                        </a>
+
+                    </div>
+
+
+                    <input
+                        id="documentInput"
+                        type="file"
+                        accept=".pdf,.png,.jpg,.jpeg,.docx,.txt"
+                        hidden
+                    >
+
+                    <label class="document-type-field" for="documentType">
+                        <span>Document category</span>
+                        <small>Select the type of record before uploading.</small>
+                    </label>
+                    <select id="documentType" aria-label="Document category">
+                        <option value="PRESCRIPTION">
+                            Prescription
+                        </option>
+                        <option value="LAB_REPORT">
+                            Laboratory report
+                        </option>
+                    </select>
+                    <div id="dashboard-upload-progress" class="dashboard-upload-progress hidden" role="status" aria-live="polite">
+                        <progress aria-label="Document processing in progress"></progress>
+                        <p id="dashboard-upload-progress-message"></p>
+                    </div>
+
+                </section>
+
+
+
+                <!-- ================= ACTIVITY ================= -->
+
+                <section class="card activity-card">
+
+                    <div class="card-head">
+
+                        <h2>
+                            Recent Activity
+                        </h2>
+
+                    </div>
+
+
+                    <div id="activityList">
+
+                        <div class="empty-state">
+                            Activity will appear here.
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+            <section class="card summary-history-card">
+                <div class="card-head">
+                    <div>
+                        <h2>Saved Symptom Summaries</h2>
+                        <p>Completed doctor-ready reports stay available here and on the Symptom Summary page.</p>
+                    </div>
+                    <a class="text-btn" href="/symptom-summary">Open Symptom Summary</a>
+                </div>
+                <div id="dashboard-summary-reports" class="summary-report-history" data-summary-reports>
+                    <div class="loading">Loading saved symptom summaries...</div>
+                </div>
+            </section>
+
+
+
+            <!-- ================= PATIENT SUMMARY ================= -->
+
+            <section
+                class="summary-banner"
+                id="summary"
+            >
+
+                <div class="summary-icon">
+                    ♧
+                </div>
+
+                <div>
+
+                    <h2>
+                        Doctor-Ready Symptom Summary
+                    </h2>
+
+                    <p>
+                        Talk to the Patient Summary Agent one question at a time
+                        and generate a structured report.
+                    </p>
+
+                </div>
+
+
+                <button
+                    class="primary-btn"
+                    id="startSummaryBtn"
+                >
+                    Start Interview →
+                </button>
+
+            </section>
+
+
+
+            <footer>
+                © 2026 SwasthyaSaar. All rights reserved.
+            </footer>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+
+<div
+    class="modal hidden"
+    id="documentDetailModal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="documentDetailHeading"
+>
+
+    <div class="modal-card document-detail-card">
+
+        <button
+            class="modal-close"
+            type="button"
+            data-close="documentDetailModal"
+            aria-label="Close parsed document"
+        >
+            ×
+        </button>
+
+        <h2 id="documentDetailHeading">
+            Parsed Document Result
+        </h2>
+
+        <pre id="documentDetailText" class="parsed-document-text"></pre>
+
+    </div>
+
+</div>
+
+
+
+<!-- ================= API CONFIG ================= -->
+
+<script>
+
+    window.SWASTHYASAAR_CONFIG = {
+        apiBase: {{ api_base | tojson }},
+        endpoints: {{ api_endpoints | tojson }}
+    };
+
+</script>
+
+
+<script
+    src="{{ url_for('static', path='js/patient_summary_reports.js') }}"
+></script>
+
+<script
+    src="{{ url_for('static', path='js/dashboard.js') }}?v=20261010-document-cards"
+></script>
+
+</body>
+
+</html>

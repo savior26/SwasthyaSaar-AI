@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>SwasthyaSaar | Secure Healthcare</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', path='css/auth.css') }}"
+    >
+</head>
+
+<body>
+
+<div class="auth-page">
+
+    <!-- ========================================= -->
+    <!-- LEFT BRAND PANEL -->
+    <!-- ========================================= -->
+
+    <section class="brand-panel">
+
+        <div class="brand-content">
+
+            <div class="brand-logo">
+                <div class="logo-symbol">
+                    +
+                </div>
+
+                <div>
+                    <h1>Swasthya<span>Saar</span></h1>
+                    <p>AI-Powered Health Companion</p>
+                </div>
+            </div>
+
+
+            <div class="brand-message">
+
+                <div class="eyebrow">
+                    YOUR HEALTH. ONE PLACE.
+                </div>
+
+                <h2>
+                    Understand your health.
+                    <br>
+                    <span>Stay one step ahead.</span>
+                </h2>
+
+                <p>
+                    Securely organize your medical documents,
+                    prescriptions, lab reports and health history
+                    with intelligent assistance.
+                </p>
+
+            </div>
+
+
+            <div class="feature-list">
+
+                <div class="feature">
+                    <div class="feature-icon">✓</div>
+
+                    <div>
+                        <strong>Medical Records</strong>
+                        <span>Keep your health documents organized</span>
+                    </div>
+                </div>
+
+
+                <div class="feature">
+                    <div class="feature-icon">⌁</div>
+
+                    <div>
+                        <strong>AI Health Assistance</strong>
+                        <span>Get meaningful insights from your records</span>
+                    </div>
+                </div>
+
+
+                <div class="feature">
+                    <div class="feature-icon">♢</div>
+
+                    <div>
+                        <strong>Health Safety</strong>
+                        <span>Identify important medication and report alerts</span>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="brand-footer">
+            <span>© 2026 SwasthyaSaar</span>
+            <span>Secure • Private • Intelligent</span>
+        </div>
+
+    </section>
+
+
+    <!-- ========================================= -->
+    <!-- AUTH PANEL -->
+    <!-- ========================================= -->
+
+    <section class="auth-panel">
+
+        <div class="auth-container">
+
+
+            <!-- MOBILE BRAND -->
+
+            <div class="mobile-brand">
+
+                <div class="mobile-logo">
+                    +
+                </div>
+
+                <div>
+                    <h2>Swasthya<span>Saar</span></h2>
+                    <p>AI-Powered Health Companion</p>
+                </div>
+
+            </div>
+
+
+            <!-- ================================= -->
+            <!-- LOGIN -->
+            <!-- ================================= -->
+
+            <div
+                id="login-section"
+                class="auth-section active"
+            >
+
+                <div class="auth-heading">
+
+                    <span class="small-label">
+                        WELCOME BACK
+                    </span>
+
+                    <h2>Sign in to your account</h2>
+
+                    <p>
+                        Access your personal health dashboard
+                        securely.
+                    </p>
+
+                </div>
+
+
+                <form id="login-form">
+
+
+                    <div class="form-group">
+
+                        <label for="login-email">
+                            Email address
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                @
+                            </span>
+
+                            <input
+                                type="email"
+                                id="login-email"
+                                name="email"
+                                placeholder="you@example.com"
+                                autocomplete="email"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="login-password">
+                            Password
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                ●
+                            </span>
+
+                            <input
+                                type="password"
+                                id="login-password"
+                                name="password"
+                                placeholder="Enter your password"
+                                autocomplete="current-password"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="password-toggle"
+                                onclick="togglePassword('login-password', this)"
+                            >
+                                Show
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        id="login-error"
+                        class="form-message error"
+                    ></div>
+
+
+                    <button
+                        type="submit"
+                        class="primary-button"
+                        id="login-button"
+                    >
+
+                        <span class="button-text">
+                            Sign in
+                        </span>
+
+                        <span class="button-loader"></span>
+
+                    </button>
+
+
+                </form>
+
+
+                <div class="auth-switch">
+
+                    Don't have an account?
+
+                    <button
+                        type="button"
+                        onclick="showRegister()"
+                    >
+                        Create account
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================================= -->
+            <!-- REGISTER -->
+            <!-- ================================= -->
+
+            <div
+                id="register-section"
+                class="auth-section"
+            >
+
+                <div class="auth-heading">
+
+                    <span class="small-label">
+                        GET STARTED
+                    </span>
+
+                    <h2>Create your account</h2>
+
+                    <p>
+                        Start building your secure health profile.
+                    </p>
+
+                </div>
+
+
+                <form id="register-form">
+
+
+                    <!-- NAME -->
+
+                    <div class="form-group">
+
+                        <label for="register-name">
+                            Full name
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                ◯
+                            </span>
+
+                            <input
+                                type="text"
+                                id="register-name"
+                                placeholder="Your full name"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- EMAIL -->
+
+                    <div class="form-group">
+
+                        <label for="register-email">
+                            Email address
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                @
+                            </span>
+
+                            <input
+                                type="email"
+                                id="register-email"
+                                placeholder="you@example.com"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-row">
+
+                        <!-- GENDER -->
+
+                        <div class="form-group">
+
+                            <label for="register-gender">
+                                Gender
+                            </label>
+
+                            <select id="register-gender">
+
+                                <option value="">
+                                    Select
+                                </option>
+
+                                <option value="Male">
+                                    Male
+                                </option>
+
+                                <option value="Female">
+                                    Female
+                                </option>
+
+                                <option value="Other">
+                                    Other
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- YEAR -->
+
+                        <div class="form-group">
+
+                            <label for="register-year">
+                                Year of birth
+                            </label>
+
+                            <input
+                                type="number"
+                                id="register-year"
+                                placeholder="2002"
+                                min="1900"
+                                max="2026"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- PHONE -->
+
+                    <div class="form-group">
+
+                        <label for="register-phone">
+                            Phone number
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                +
+                            </span>
+
+                            <input
+                                type="tel"
+                                id="register-phone"
+                                placeholder="+91 XXXXX XXXXX"
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- BLOOD GROUP -->
+
+                    <div class="form-group">
+
+                        <label for="register-blood">
+                            Blood group
+                        </label>
+
+                        <select id="register-blood">
+
+                            <option value="">
+                                Select blood group
+                            </option>
+
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- MEDICAL CONDITION -->
+
+                    <div class="form-group">
+
+                        <label for="register-condition">
+                            Medical condition
+                            <span>Optional</span>
+                        </label>
+
+                        <textarea
+                            id="register-condition"
+                            rows="2"
+                            placeholder="e.g. Diabetes, Hypertension..."
+                        ></textarea>
+
+                    </div>
+
+
+                    <!-- ALLERGY -->
+
+                    <div class="form-group">
+
+                        <label for="register-allergy">
+                            Allergy
+                            <span>Optional</span>
+                        </label>
+
+                        <textarea
+                            id="register-allergy"
+                            rows="2"
+                            placeholder="e.g. Penicillin, dust..."
+                        ></textarea>
+
+                    </div>
+
+
+                    <!-- PASSWORD -->
+
+                    <div class="form-group">
+
+                        <label for="register-password">
+                            Password
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                ●
+                            </span>
+
+                            <input
+                                type="password"
+                                id="register-password"
+                                placeholder="Create a strong password"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="password-toggle"
+                                onclick="togglePassword('register-password', this)"
+                            >
+                                Show
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- CONFIRM PASSWORD -->
+
+                    <div class="form-group">
+
+                        <label for="register-confirm">
+                            Confirm password
+                        </label>
+
+                        <div class="input-wrapper">
+
+                            <span class="input-icon">
+                                ●
+                            </span>
+
+                            <input
+                                type="password"
+                                id="register-confirm"
+                                placeholder="Confirm your password"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        id="register-error"
+                        class="form-message error"
+                    ></div>
+
+
+                    <div
+                        id="register-success"
+                        class="form-message success"
+                    ></div>
+
+
+                    <button
+                        type="submit"
+                        class="primary-button"
+                        id="register-button"
+                    >
+
+                        <span class="button-text">
+                            Create account
+                        </span>
+
+                        <span class="button-loader"></span>
+
+                    </button>
+
+
+                </form>
+
+
+                <div class="auth-switch">
+
+                    Already have an account?
+
+                    <button
+                        type="button"
+                        onclick="showLogin()"
+                    >
+                        Sign in
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="security-note">
+
+                <span>🔒</span>
+
+                <p>
+                    Your health information is handled through
+                    authenticated access.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<script src="{{ url_for('static', path='js/auth.js') }}"></script>
+
+</body>
+
+</html>
