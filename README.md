@@ -60,8 +60,6 @@ routers. It also adds the `processing_stage` column to an existing
 compatibility adjustment, not a general database migration system; use a
 versioned migration tool before deploying larger schema changes.
 
-The root `safety.py` prototype has been removed. Medication-safety code lives
-in the `safety/` package.
 
 ## Requirements
 
@@ -71,10 +69,6 @@ in the `safety/` package.
 - Network access to configured third-party services for AI, RxNorm, and FDA
   drug-label lookups.
 
-The `data/` directory may contain local SQLite checkpoint files from previous
-development workflows. The current symptom-summary sessions and reports are
-stored in the configured application database; the local checkpoint files are
-not the application database and should not be treated as backups.
 
 ## Configuration
 
@@ -89,8 +83,7 @@ through the process environment:
 | `GOOGLE_API_KEY` | Credential used by the Google GenAI client. |
 | `EXPIRY` | Token lifetime in minutes; defaults to `30` if omitted. |
 
-Example shape only (replace all placeholders locally; do not commit real
-credentials):
+
 
 ```dotenv
 DATABASE_URL=postgresql+psycopg2://<user>:<password>@<host>:5432/<database>
@@ -180,12 +173,6 @@ See `/docs` for the exact request fields and response schemas.
 6. The temporary processing file is removed after the worker finishes; this
    implementation does not provide a permanent original-document download.
 
-Processing currently uses FastAPI in-process background tasks. These tasks
-are suitable for local development but are not a durable job queue: a server
-restart or process failure can interrupt an active job. For production, use a
-durable task system, managed database migrations, structured monitoring, and
-appropriate backup/retention policies.
-
 Deleting a document removes its parsed report/prescription and associated
 safety records. Prescription-linked medication rows are also removed.
 Deletion is restricted to the owning patient and is not allowed while
@@ -207,12 +194,3 @@ database. Secure the database, transport, backups, logs, deployment secrets,
 and access controls appropriately. Do not log or expose authentication
 credentials or unnecessary patient data.
 
-## Verification and development notes
-
-- Python dependencies are listed in `requirements.txt`.
-- There is no project README-defined automated test command or test suite
-  currently checked into the source tree.
-- For syntax checks, use the project environment's Python compiler and
-  `node --check` for changed JavaScript files.
-- Keep generated environments, `.env` files, OCR/model assets, and runtime
-  databases out of version control.
