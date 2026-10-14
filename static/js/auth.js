@@ -305,11 +305,10 @@ document
                 .value;
 
 
-        const medicalCondition =
-            document
-                .getElementById("register-condition")
-                .value
-                .trim();
+        const medicalCondition = Array.from(
+            document.querySelectorAll('#register-condition input[name="medical_condition"]:checked'),
+            checkbox => checkbox.value
+        ).join(", ");
 
 
         const allergy =

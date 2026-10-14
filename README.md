@@ -32,33 +32,36 @@ medication safety screening, and a guided symptom-summary interview.
 
 ```text
 .
-├── agent/                 # Persistent symptom-summary interview runtime
-├── data/                  # Local runtime/checkpoint data (not source code)
 ├── models/                # SQLAlchemy database models
+├── orchestrator/          # Document parsing and prescription-safety workflows
+├── prompts/               # Prompts used during document parsing
 ├── routes/                # FastAPI API routes and dashboard page routes
-├── safety/                # Medication normalization and safety screening
+├── safety/                # Patient context and medication safety helpers
 ├── schemas/               # Pydantic request, response, and parser schemas
-├── services/              # AI model setup, alerts, and summary PDF creation
-│   └── prompts/           # Document parsing and clinical prompts
+├── services/              # Provider API calls and alert services
 ├── static/
 │   ├── css/               # Dashboard and workspace styles
 │   └── js/                # Dashboard, workspace, and report-history behavior
 ├── templates/             # Jinja2 HTML templates
-├── uploads/               # Sample/local upload assets
 ├── utils/
-│   ├── orchestrator/      # Document parsing and prescription safety flow
-│   └── tools/             # File validation and parsed-text formatting
+│   ├── data_parsing/      # File validation and parsed-text formatting
+│   ├── prescription_safety/  # Drug normalization and safety checks
+│   └── symptom_summary/   # Persistent interview runtime and PDF reports
 ├── database.py            # SQLAlchemy engine and session dependency
 ├── main.py                # FastAPI app, schema setup, and router registration
 ├── settings.py            # Environment-backed application settings
-└── requirements.txt       # Python dependencies
+├── requirements.txt       # Python dependencies
+├── README.md              # Setup and project documentation
+└── PROJECT.TXT            # Hackathon project title and description
 ```
 
 `main.py` creates the database tables at startup and includes the application
 routers. It also adds the `processing_stage` column to an existing
 `medical_documents` table when that column is absent. This is a small
 compatibility adjustment, not a general database migration system; use a
-versioned migration tool before deploying larger schema changes.
+versioned migration tool before deploying larger schema changes. Runtime
+database and uploaded-file storage are environment/local data, not source
+modules, and should not be committed.
 
 
 ## Requirements
@@ -66,8 +69,9 @@ versioned migration tool before deploying larger schema changes.
 - Python 3.10 or newer.
 - PostgreSQL. The models use PostgreSQL UUID and JSONB column types.
 - A Google AI API key for document parsing and the symptom-summary agent.
-- Network access to configured third-party services for AI, RxNorm, and FDA
-  drug-label lookups.
+- A Tavily API key for regional/branded medicine resolution.
+- Network access to configured third-party services for AI, Tavily, RxNorm,
+  and FDA drug-label lookups.
 
 
 ## Configuration
@@ -81,6 +85,7 @@ through the process environment:
 | `SECRET_KEY` | Private signing key used for authentication tokens. |
 | `ALGORITHM` | JWT signing algorithm configured for this deployment. |
 | `GOOGLE_API_KEY` | Credential used by the Google GenAI client. |
+| `TAVILY_API_KEY` | Credential used to resolve regional or branded medicines. |
 | `EXPIRY` | Token lifetime in minutes; defaults to `30` if omitted. |
 
 
@@ -90,6 +95,7 @@ DATABASE_URL=postgresql+psycopg2://<user>:<password>@<host>:5432/<database>
 SECRET_KEY=<generate-a-long-random-secret>
 ALGORITHM=HS256
 GOOGLE_API_KEY=<your-provider-key>
+TAVILY_API_KEY=<your-tavily-key>
 EXPIRY=30
 ```
 
@@ -193,4 +199,3 @@ medications, safety checks, and summary sessions in the configured PostgreSQL
 database. Secure the database, transport, backups, logs, deployment secrets,
 and access controls appropriately. Do not log or expose authentication
 credentials or unnecessary patient data.
-

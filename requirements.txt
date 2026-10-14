@@ -20,3 +20,5 @@ python-docs
 numpy
 pgvector 
 psycopg2-binary 
+requests 
+tavily-python

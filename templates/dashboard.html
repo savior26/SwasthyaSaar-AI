@@ -7,9 +7,12 @@
 
     <title>SwasthyaSaar AI| Dashboard</title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link
         rel="stylesheet"
-        href="{{ url_for('static', path='css/dashboard.css') }}?v=20261010-document-cards"
+        href="{{ url_for('static', path='css/dashboard.css') }}?v=20261014-recent-documents"
     >
 </head>
 
@@ -43,38 +46,42 @@
         <nav class="nav">
 
             <a class="nav-item active" href="/">
-                ⌂
+                <span class="nav-icon" aria-hidden="true">⌂</span>
                 <span>Dashboard</span>
             </a>
 
+            <a class="nav-item" href="/health-trends">
+                <span class="nav-icon" aria-hidden="true">⌁</span>
+                <span>Health Trends</span>
+            </a>
+
             <a class="nav-item" href="/profile">
-                ♙
+                <span class="nav-icon" aria-hidden="true">♙</span>
                 <span>My Profile</span>
             </a>
 
             <a class="nav-item" href="/lab-reports">
-                ♧
+                <span class="nav-icon" aria-hidden="true">♧</span>
                 <span>Lab Reports</span>
             </a>
 
             <a class="nav-item" href="/medications">
-                ◈
+                <span class="nav-icon" aria-hidden="true">◈</span>
                 <span>Medications</span>
             </a>
 
             <a class="nav-item" href="/documents">
-                ▤
+                <span class="nav-icon" aria-hidden="true">▤</span>
                 <span>Documents</span>
             </a>
 
             <a class="nav-item" href="/symptom-summary">
-                ☊
+                <span class="nav-icon" aria-hidden="true">☊</span>
                 <span>Symptom Summary</span>
             </a>
 
             <a class="nav-item" href="/safety-alerts">
-
-                ⚠
+                <span class="nav-icon" aria-hidden="true">⚠</span>
 
                 <span>
                     Safety Alerts
@@ -580,17 +587,18 @@
 
                     <div class="card-head">
 
-                        <div>
-
-                            <h2>
-                                Recent Medical Documents
-                            </h2>
-
-                            <p>
-                                Review the status of your uploaded health records.
-                            </p>
-
+                        <div class="documents-card-title">
+                            <span class="documents-section-icon" aria-hidden="true">▤</span>
+                            <div>
+                                <span class="documents-eyebrow">YOUR HEALTH RECORDS</span>
+                                <h2>Recent Medical Documents</h2>
+                                <p>Track processing and review the information extracted from your uploads.</p>
+                            </div>
                         </div>
+
+                        <a class="documents-browse-link" href="/documents">
+                            All documents <span aria-hidden="true">→</span>
+                        </a>
 
                     </div>
 
@@ -826,7 +834,7 @@
 ></script>
 
 <script
-    src="{{ url_for('static', path='js/dashboard.js') }}?v=20261010-document-cards"
+    src="{{ url_for('static', path='js/dashboard.js') }}?v=20261014-recent-documents"
 ></script>
 
 </body>

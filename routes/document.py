@@ -1,25 +1,21 @@
-import asyncio
 import logging
 import os
 from threading import Lock
 from models.doc_model import MedicalDocument,LabReport,LabTest, Prescription,PrescriptionMedicine
 from models.user_model import User
-from models.model import ActiveMedication, SafetyCheck
+from models.model import ActiveMedication, SafetyCheck, SafetyConflict
 from fastapi import APIRouter, Form, status, Depends, HTTPException, UploadFile, File, BackgroundTasks, Response
 from database import SessionLocal, get_db
 from sqlalchemy.orm import Session
 from typing import Literal
-from utils.orchestrator.document_parsing import DocumentPipeline
+from orchestrator.document_parsing import DocumentPipeline
+from orchestrator.safety_pipeline import safety_pipeline
 from schemas.doc_schema import LabReportData, PrescriptionData
-from utils.tools.parse2text import lab_report_to_text, prescription_to_text
-from utils.tools.validation import validate_file
+from utils.data_parsing.parse2text import lab_report_to_text, prescription_to_text
+from utils.data_parsing.validation import validate_file
 import tempfile
 from pathlib import Path
 from routes.auth import get_current_user
-from safety.safety_storage import save_safety_result
-from safety.active_medication import add_active_medications
-from safety.rx_norm import NormalizedDrug
-from utils.orchestrator.prescription_safety_pipeline import run_safety_pipeline
 from datetime import datetime , timezone
 from uuid import UUID
 
@@ -147,6 +143,18 @@ def _set_document_stage(
     return document
 
 
+def _split_profile_values(value: str | None) -> list[str]:
+    if not value:
+        return []
+
+    return [
+        item.strip()
+        for line in value.splitlines()
+        for item in line.replace(";", ",").split(",")
+        if item.strip()
+    ]
+
+
 def process_uploaded_document(
     doc_id,
     patient_id,
@@ -232,32 +240,82 @@ def process_uploaded_document(
             document.processing_stage = current_stage
             db.commit()
 
-            safety_result = asyncio.run(run_safety_pipeline(
-                db=db,
-                patient_id=patient_id,
-                new_drug_names=[
-                    medicine.name for medicine in result.medicines
-                ],
-                language="en",
-            ))
-            normalized_drugs = [
-                NormalizedDrug.model_validate(drug)
-                for drug in safety_result["normalized_drugs"]
-            ]
-            add_active_medications(
-                db=db,
-                patient_id=patient_id,
-                prescription=prescription,
-                normalized_drugs=normalized_drugs,
-                prescription_medicines=result.medicines,
+            patient = (
+                db.query(User)
+                .filter(User.id == patient_id)
+                .first()
             )
-            save_safety_result(
-                db=db,
+            if patient is None:
+                raise LookupError("The patient for this document no longer exists.")
+
+            safety_result = safety_pipeline.run_pipeline({
+                "drugs": [medicine.name for medicine in result.medicines],
+                "diseases": _split_profile_values(patient.medical_condition),
+                "allergies": _split_profile_values(patient.allergy),
+            })
+            print("drugs", [medicine.name for medicine in result.medicines],
+                "diseases", _split_profile_values(patient.medical_condition),
+                "allergies", _split_profile_values(patient.allergy))
+            print(safety_result)
+            alerts = safety_result["alerts"]
+            failed_checks = [
+                alert for alert in alerts
+                if alert.get("type") == "Error"
+            ]
+            conflicts = [
+                alert for alert in alerts
+                if alert.get("type") != "Error"
+            ]
+            has_critical_issue = any(
+                str(alert.get("severity", "")).strip().lower()
+                in {"high", "critical", "severe", "contraindicated"}
+                for alert in conflicts
+            )
+
+            safety_check = SafetyCheck(
                 patient_id=patient_id,
                 doc_id=document.doc_id,
-                result=safety_result,
+                has_critical_issue=has_critical_issue,
+                patient_alert_message=(
+                    "Assessment incomplete: One or more medication safety checks failed."
+                    if failed_checks
+                    else "Potential medication safety findings were detected. Please consult a clinician or pharmacist."
+                    if conflicts
+                    else "No potential medication safety conflicts were detected by the available checks."
+                ),
+                doctor_clinical_note=(
+                    f"Pipeline status: {safety_result['prescription_status']}. "
+                    f"Potential findings: {len(conflicts)}. "
+                    f"Failed checks: {len(failed_checks)}."
+                ),
+                action_required=(
+                    "Have a clinician or pharmacist review the prescription and patient profile."
+                    if failed_checks or conflicts
+                    else "No additional review was indicated by the available checks."
+                ),
                 language="en",
             )
+            db.add(safety_check)
+            db.flush()
+
+            for alert in conflicts:
+                db.add(SafetyConflict(
+                    safety_check_id=safety_check.safety_check_id,
+                    conflict_type=str(alert.get("type") or "Medication Safety Finding"),
+                    severity=str(alert.get("severity") or "REVIEW"),
+                    description=alert.get("description"),
+                ))
+
+            normalization_details = safety_result["normalization_details"]
+            for medicine in result.medicines:
+                normalization = normalization_details.get(medicine.name, {})
+                db.add(ActiveMedication(
+                    patient_id=patient_id,
+                    prescription_id=prescription.prescription_id,
+                    name=normalization.get("corrected_name") or medicine.name,
+                    rxcui=normalization.get("rxcui"),
+                ))
+
             db.commit()
 
         _set_document_stage(

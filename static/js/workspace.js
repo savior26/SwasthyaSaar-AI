@@ -52,13 +52,15 @@
 
     const reportError = error => {
         if (!message) return;
+        message.classList.remove("success");
         message.classList.add("error");
         message.textContent = error.message || "The request failed.";
     };
 
-    const setMessage = text => {
+    const setMessage = (text, type = "") => {
         if (!message) return;
-        message.classList.remove("error");
+        message.classList.remove("error", "success");
+        if (type) message.classList.add(type);
         message.textContent = text || "";
     };
 
@@ -165,7 +167,55 @@
         } else {
             const form = document.getElementById("profile-form");
             for (const name of ["name", "year_of_birth", "medical_condition", "allergy", "blood_group", "phone_number"]) {
-                form.elements[name].value = user[name] ?? "";
+                if (name === "medical_condition") {
+                    setMedicalConditionSelection(
+                        document.getElementById("profile-medical-conditions"),
+                        user[name]
+                    );
+                } else {
+                    form.elements[name].value = user[name] ?? "";
+                }
+            }
+        }
+    }
+
+    function setMedicalConditionSelection(container, savedValue) {
+        const conditions = (savedValue || "")
+            .split(/[,;\n]/)
+            .map(value => value.trim())
+            .filter(Boolean);
+        const checkboxes = Array.from(
+            container.querySelectorAll('input[name="medical_condition"]')
+        );
+
+        for (const condition of conditions) {
+            const checkbox = checkboxes.find(
+                item => item.value.toLowerCase() === condition.toLowerCase()
+            );
+            if (checkbox) {
+                checkbox.checked = true;
+            } else {
+                const legacyLabel = document.createElement("label");
+                legacyLabel.className = "condition-option";
+                const legacyCheckbox = document.createElement("input");
+                legacyCheckbox.type = "checkbox";
+                legacyCheckbox.name = "medical_condition";
+                legacyCheckbox.value = condition;
+                legacyCheckbox.checked = true;
+                const labelText = document.createElement("span");
+                labelText.textContent = condition;
+                legacyLabel.append(legacyCheckbox, labelText);
+
+                let legacyGroup = container.querySelector(".condition-group-legacy");
+                if (!legacyGroup) {
+                    legacyGroup = document.createElement("fieldset");
+                    legacyGroup.className = "condition-group condition-group-legacy";
+                    const legend = document.createElement("legend");
+                    legend.textContent = "Other saved conditions";
+                    legacyGroup.append(legend);
+                    container.append(legacyGroup);
+                }
+                legacyGroup.append(legacyLabel);
             }
         }
     }
@@ -173,17 +223,34 @@
     async function saveProfile(event) {
         event.preventDefault();
         const form = event.currentTarget;
+        const submitButton = form.querySelector('button[type="submit"]');
         const payload = Object.fromEntries(new FormData(form).entries());
         payload.year_of_birth = payload.year_of_birth ? Number(payload.year_of_birth) : null;
+        payload.medical_condition = Array.from(
+            form.querySelectorAll('input[name="medical_condition"]:checked'),
+            checkbox => checkbox.value
+        ).join(", ") || null;
+
+        submitButton.disabled = true;
+        submitButton.textContent = "Saving…";
+        form.setAttribute("aria-busy", "true");
+        setMessage("Saving your profile…");
 
         try {
             await api(endpoints.profileUpdate || "/user/update", {
                 method: "PUT",
                 body: JSON.stringify(payload)
             });
-            setMessage("Profile updated.");
+            submitButton.textContent = "Profile updated";
+            setMessage("Your profile has been saved.", "success");
+            await new Promise(resolve => window.setTimeout(resolve, 700));
+            window.location.assign("/profile?updated=1");
         } catch (error) {
             reportError(error);
+        } finally {
+            submitButton.disabled = false;
+            submitButton.textContent = "Save profile";
+            form.removeAttribute("aria-busy");
         }
     }
 
@@ -797,6 +864,10 @@
         }
 
         if (page === "profile" || page === "profile-edit") {
+            if (page === "profile" && new URLSearchParams(window.location.search).has("updated")) {
+                setMessage("Profile updated successfully.", "success");
+                window.history.replaceState(null, "", "/profile");
+            }
             loadProfile().catch(reportError);
             if (page === "profile-edit") {
                 document.getElementById("profile-form").addEventListener("submit", saveProfile);

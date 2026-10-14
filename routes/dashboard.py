@@ -3,6 +3,8 @@ from pathlib import Path
 from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates
 
+from utils.medical_conditions import MEDICAL_CONDITION_GROUPS
+
 
 router = APIRouter(
     tags=["Dashboard UI"]
@@ -112,6 +114,7 @@ def render_workspace(request: Request, page: str):
             "page": key,
             "api_base": "",
             "api_endpoints": API_ENDPOINTS,
+            "medical_condition_groups": MEDICAL_CONDITION_GROUPS,
         },
     )
 
@@ -133,6 +136,18 @@ def dashboard(request: Request):
             "api_base": "",
             "api_endpoints": API_ENDPOINTS
         }
+    )
+
+
+@router.get("/health-trends", name="health-trends")
+def health_trends_page(request: Request):
+    return templates.TemplateResponse(
+        request=request,
+        name="health_trends.html",
+        context={
+            "api_base": "",
+            "api_endpoints": API_ENDPOINTS,
+        },
     )
 
 

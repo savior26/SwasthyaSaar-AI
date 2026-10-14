@@ -1607,28 +1607,53 @@ function renderDocuments() {
     body.innerHTML = documents.slice(0, 8).map(document => {
         const documentId = document.doc_id || document.id || "";
         const filename = document.original_filename || document.filename || "Document";
+        const documentType = String(document.document_type || "Medical document");
+        const documentTypeLabel = documentType
+            .replace(/[_-]+/g, " ")
+            .replace(/\b\w/g, character => character.toUpperCase());
+        const typeKey = documentType.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+        const status = String(document.status || "unknown").toLowerCase();
+        const statusLabel = status.charAt(0).toUpperCase() + status.slice(1);
+        const canView = status === "parsed";
+        const canDelete = status !== "processing";
+        const reviewMessage = document.review_summary || document.processing_message;
+
         return `
             <article class="dashboard-document-card">
-                <div class="dashboard-document-card-heading">
-                    <h3>${esc(filename)}</h3>
-                    <span class="status ${esc(String(document.status || "UNKNOWN").toUpperCase())}">
-                        ${esc(document.status || "Unknown")}
-                    </span>
+                <span class="dashboard-document-icon ${esc(typeKey)}" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                        <path d="M7 3.75h7l4.25 4.3v12.2H7a2 2 0 0 1-2-2v-12.5a2 2 0 0 1 2-2Z"></path>
+                        <path d="M14 3.9v4.5h4.1M8.5 13h7M8.5 16.5h7"></path>
+                    </svg>
+                </span>
+                <div class="dashboard-document-main">
+                    <div class="dashboard-document-card-heading">
+                        <h3 title="${esc(filename)}">${esc(filename)}</h3>
+                        <span class="dashboard-document-status ${esc(status)}">
+                            <span class="dashboard-document-status-dot" aria-hidden="true"></span>
+                            ${esc(statusLabel)}
+                        </span>
+                    </div>
+                    <div class="dashboard-document-meta">
+                        <span class="dashboard-document-type">${esc(documentTypeLabel)}</span>
+                        <span class="dashboard-document-date">
+                            <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5.5 2.75v2.5m9-2.5v2.5M3.75 7.25h12.5M4.5 4.25h11a1 1 0 0 1 1 1v10.25a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1V5.25a1 1 0 0 1 1-1Z"></path></svg>
+                            Uploaded ${esc(formatDate(document.uploaded_at))}
+                        </span>
+                    </div>
+                    ${reviewMessage
+                        ? `<p class="document-processing-note">${esc(reviewMessage)}</p>`
+                        : ""}
                 </div>
-                <div class="dashboard-document-meta">
-                    <span>${esc(document.document_type || "Medical document")}</span>
-                    <span>Uploaded ${esc(formatDate(document.uploaded_at))}</span>
-                </div>
-                ${document.review_summary || document.processing_message
-                    ? `<p class="document-processing-note">${esc(document.review_summary || document.processing_message)}</p>`
-                    : ""}
                 <div class="dashboard-document-actions">
                     <button class="eye-btn" type="button" aria-label="View parsed details for ${esc(filename)}"
-                        onclick="viewDocument('${esc(documentId)}')" ${document.status !== "parsed" ? "disabled" : ""}>
+                        onclick="viewDocument('${esc(documentId)}')" ${!canView ? "disabled" : ""}>
+                        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M2.5 10s2.6-4.2 7.5-4.2 7.5 4.2 7.5 4.2-2.6 4.2-7.5 4.2S2.5 10 2.5 10Z"></path><circle cx="10" cy="10" r="1.8"></circle></svg>
                         View details
                     </button>
                     <button class="document-delete-button" type="button" data-delete-document="${esc(documentId)}"
-                        ${document.status === "processing" ? "disabled" : ""} aria-label="Delete ${esc(filename)}">
+                        ${!canDelete ? "disabled" : ""} aria-label="Delete ${esc(filename)}">
+                        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4.5 6h11m-9.5 0 .6 10h7.8L15 6m-7-2h4m-5 5v4m6-4v4"></path></svg>
                         Delete
                     </button>
                 </div>

@@ -2,7 +2,7 @@
 
 from pydantic import BaseModel
 
-from services.ai_model import ai_Model
+from services.api_call import ai_Model
 
 
 class TriageReport(BaseModel):

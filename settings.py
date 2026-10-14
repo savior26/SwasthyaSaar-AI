@@ -12,7 +12,7 @@ class Settings(BaseSettings):
     SECRET_KEY: str
     EXPIRY: int = 30
     ALGORITHM: str
-
+    
    
 
 

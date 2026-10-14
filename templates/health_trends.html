@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f4f8fb">
+    <title>SwasthyaSaar AI | Health Trends</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/dashboard.css') }}?v=20261014-medical-refresh">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/health_trends.css') }}?v=20261014">
+</head>
+<body class="trends-page">
+    <div class="app-shell">
+        <aside class="sidebar">
+            <a class="brand trends-brand" href="/" aria-label="SwasthyaSaar AI dashboard">
+                <span class="brand-mark" aria-hidden="true">+</span>
+                <span>
+                    <span class="brand-name">Swasthya<span>Saar AI</span></span>
+                    <span class="brand-tagline">Your health, organized</span>
+                </span>
+            </a>
+            <nav class="nav" aria-label="Main navigation">
+                <a class="nav-item" href="/"><span class="nav-icon" aria-hidden="true">⌂</span><span>Dashboard</span></a>
+                <a class="nav-item active" href="/health-trends" aria-current="page"><span class="nav-icon" aria-hidden="true">⌁</span><span>Health Trends</span></a>
+                <a class="nav-item" href="/profile"><span class="nav-icon" aria-hidden="true">♙</span><span>My Profile</span></a>
+                <a class="nav-item" href="/lab-reports"><span class="nav-icon" aria-hidden="true">♧</span><span>Lab Reports</span></a>
+                <a class="nav-item" href="/medications"><span class="nav-icon" aria-hidden="true">◈</span><span>Medications</span></a>
+                <a class="nav-item" href="/documents"><span class="nav-icon" aria-hidden="true">▤</span><span>Documents</span></a>
+                <a class="nav-item" href="/symptom-summary"><span class="nav-icon" aria-hidden="true">☊</span><span>Symptom Summary</span></a>
+                <a class="nav-item" href="/safety-alerts"><span class="nav-icon" aria-hidden="true">⚠</span><span>Safety Alerts</span></a>
+            </nav>
+            <div class="sidebar-safe trends-safe">
+                <div class="safe-icon" aria-hidden="true">✓</div>
+                <h3>For your care team</h3>
+                <p>Bring the original reports and discuss results with a qualified clinician.</p>
+            </div>
+        </aside>
+
+        <main class="main trends-main">
+            <header class="topbar trends-topbar">
+                <a class="trends-back" href="/">← Dashboard</a>
+                <div class="user-mini">
+                    <div class="avatar" aria-hidden="true">+</div>
+                    <div><strong>SwasthyaSaar</strong><small>Personal health records</small></div>
+                </div>
+            </header>
+
+            <section class="content trends-content" aria-labelledby="trends-title">
+                <div class="trends-heading">
+                    <div>
+                        <p class="eyebrow">YOUR HEALTH HISTORY</p>
+                        <h1 id="trends-title">Health trends</h1>
+                        <p class="trends-subtitle">Explore numeric results from your uploaded lab reports over time.</p>
+                    </div>
+                    <label class="timeline-control" for="timeline-range">
+                        <span>Timeline</span>
+                        <select id="timeline-range">
+                            <option value="30">Last 30 days</option>
+                            <option value="90">Last 3 months</option>
+                            <option value="180">Last 6 months</option>
+                            <option value="365">Last 12 months</option>
+                            <option value="all" selected>All available</option>
+                        </select>
+                    </label>
+                </div>
+
+                <div class="trends-summary" aria-live="polite">
+                    <article class="trend-stat">
+                        <span class="trend-stat-icon" aria-hidden="true">▤</span>
+                        <div><span class="trend-stat-label">Tests tracked</span><strong id="trend-test-count">—</strong></div>
+                    </article>
+                    <article class="trend-stat">
+                        <span class="trend-stat-icon trend-stat-icon-blue" aria-hidden="true">⌁</span>
+                        <div><span class="trend-stat-label">Results in range</span><strong id="trend-point-count">—</strong></div>
+                    </article>
+                    <article class="trend-stat">
+                        <span class="trend-stat-icon trend-stat-icon-amber" aria-hidden="true">!</span>
+                        <div><span class="trend-stat-label">Flagged results</span><strong id="trend-flag-count">—</strong></div>
+                    </article>
+                </div>
+
+                <div class="trends-note" role="note">
+                    <span aria-hidden="true">ⓘ</span>
+                    <p>
+                        Each test is charted separately because units and reference ranges differ.
+                        Values and flags are extracted from uploaded records, may be incomplete,
+                        and are not a diagnosis. Confirm results with your clinician.
+                        <span id="trend-undated-note" hidden></span>
+                    </p>
+                </div>
+
+                <div id="trend-status" class="trend-status" role="status" aria-live="polite">Loading your lab history…</div>
+                <div id="trend-chart-grid" class="trend-chart-grid"></div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        window.SWASTHYASAAR_CONFIG = {
+            apiBase: {{ api_base | tojson }},
+            endpoints: {{ api_endpoints | tojson }}
+        };
+    </script>
+    <script src="{{ url_for('static', path='js/health_trends.js') }}?v=20261014"></script>
+</body>
+</html>

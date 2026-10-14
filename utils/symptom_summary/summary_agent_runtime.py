@@ -14,7 +14,7 @@ from schemas.patient_summary_schema import (
     PatientSymptomReport,
     PatientSummaryResponse,
 )
-from services.ai_model import ai_Model
+from services.api_call import ai_Model
 
 
 class InterviewTurn(BaseModel):

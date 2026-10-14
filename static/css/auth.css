@@ -442,12 +442,71 @@ textarea {
         box-shadow .2s ease;
 }
 
+.condition-picker {
+    display: grid;
+    gap: 12px;
+}
+
+.condition-group {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    display: grid;
+    gap: 10px 14px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 12px;
+}
+
+.condition-group legend {
+    color: var(--text);
+    font-size: 12px;
+    font-weight: 650;
+    padding: 0 6px;
+}
+
+.form-group .condition-option {
+    align-items: center;
+    display: flex;
+    font-size: 12px;
+    font-weight: 400;
+    gap: 8px;
+    margin: 0;
+}
+
+.condition-option input[type="checkbox"] {
+    accent-color: var(--primary);
+    flex: 0 0 auto;
+    height: 16px;
+    margin: 0;
+    width: 16px;
+}
+
+.condition-option span {
+    color: var(--text);
+    float: none;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.multiselect-hint {
+    color: var(--muted);
+    display: block;
+    font-size: 11px;
+    line-height: 1.5;
+    margin-top: 6px;
+}
+
 
 input,
 select {
     height: 45px;
 
     padding: 0 14px;
+}
+
+@media (max-width: 520px) {
+    .condition-group {
+        grid-template-columns: 1fr;
+    }
 }
 
 
@@ -781,5 +840,336 @@ textarea:focus {
     .form-row {
         grid-template-columns: 1fr;
         gap: 0;
+    }
+}
+
+/* Shared medical-dashboard visual system */
+:root {
+    --primary: #168b7a;
+    --primary-dark: #117969;
+    --primary-light: #eaf6f3;
+    --text: #18364b;
+    --muted: #748797;
+    --border: #e1e9ed;
+    --background: #f4f8fb;
+    font-family: Roboto, "Segoe UI", Arial, sans-serif;
+}
+
+body {
+    background: #f4f8fb;
+    color: #18364b;
+    font-family: Roboto, "Segoe UI", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+.auth-page {
+    grid-template-columns: minmax(390px, 46%) minmax(0, 54%);
+}
+
+.brand-panel {
+    position: relative;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 12% 88%, rgb(22 139 122 / 11%), transparent 30%),
+        linear-gradient(150deg, #f0f8f6, #e7f3f1);
+    color: #18364b;
+    padding: 44px clamp(30px, 5vw, 72px);
+}
+
+.brand-panel::after {
+    position: absolute;
+    right: -130px;
+    bottom: -190px;
+    width: 430px;
+    height: 430px;
+    border: 1px solid rgb(22 139 122 / 9%);
+    border-radius: 50%;
+    box-shadow: 0 0 0 38px rgb(22 139 122 / 3%), 0 0 0 78px rgb(22 139 122 / 2%);
+    content: "";
+    pointer-events: none;
+}
+
+.brand-content,
+.brand-footer {
+    position: relative;
+    z-index: 1;
+}
+
+.brand-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 570px;
+    min-height: 100%;
+}
+
+.brand-logo {
+    gap: 12px;
+    margin-bottom: clamp(48px, 9vh, 95px);
+}
+
+.logo-symbol {
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    background: #168b7a;
+    color: #fff;
+    box-shadow: 0 8px 20px rgb(22 139 122 / 18%);
+}
+
+.brand-logo h1 {
+    color: #18364b;
+    font-size: 23px;
+    letter-spacing: -.7px;
+}
+
+.brand-logo h1 span,
+.mobile-brand h2 span {
+    color: #168b7a;
+}
+
+.brand-logo p {
+    color: #788b99;
+    font-size: 11px;
+}
+
+.eyebrow {
+    margin-bottom: 14px;
+    color: #168b7a;
+    font-size: 10px;
+    letter-spacing: 1.7px;
+}
+
+.brand-message h2 {
+    margin-bottom: 17px;
+    color: #18364b;
+    font-size: clamp(34px, 4vw, 49px);
+    font-weight: 600;
+    letter-spacing: -1.8px;
+    line-height: 1.1;
+}
+
+.brand-message h2 span {
+    color: #168b7a;
+}
+
+.brand-message p {
+    max-width: 470px;
+    color: #667f8d;
+    font-size: 14px;
+    line-height: 1.75;
+}
+
+.feature-list {
+    gap: 17px;
+    margin-top: 38px;
+}
+
+.feature {
+    gap: 12px;
+}
+
+.feature-icon {
+    width: 35px;
+    height: 35px;
+    border: 1px solid #d6e9e4;
+    border-radius: 11px;
+    background: #fff;
+    color: #168b7a;
+    font-size: 13px;
+}
+
+.feature strong {
+    margin-bottom: 2px;
+    color: #31566a;
+    font-size: 12px;
+}
+
+.feature span {
+    color: #7c929d;
+    font-size: 11px;
+}
+
+.brand-footer {
+    border-color: #dceae6;
+    color: #83969f;
+    font-size: 10px;
+}
+
+.auth-panel {
+    align-items: center;
+    background: #f8fafb;
+    padding: 32px;
+}
+
+.auth-container {
+    width: min(470px, 100%);
+    margin: auto;
+    padding: 42px clamp(25px, 4vw, 43px);
+    border: 1px solid #e5ecef;
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: 0 16px 48px rgb(31 68 91 / 7%);
+}
+
+.auth-heading {
+    margin-bottom: 28px;
+}
+
+.small-label {
+    margin-bottom: 10px;
+    color: #168b7a;
+    font-size: 10px;
+    letter-spacing: 1.6px;
+}
+
+.auth-heading h2 {
+    margin-bottom: 8px;
+    color: #18364b;
+    font-size: 27px;
+    font-weight: 600;
+    letter-spacing: -.7px;
+}
+
+.auth-heading p {
+    color: #748797;
+    font-size: 13px;
+}
+
+.form-group label {
+    color: #3d5b6d;
+    font-size: 12px;
+}
+
+input,
+select,
+textarea {
+    border-color: #dce7ed;
+    border-radius: 9px;
+    color: #254458;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: #8dcfc2;
+    box-shadow: 0 0 0 3px rgb(22 139 122 / 9%);
+    outline: none;
+}
+
+.input-icon {
+    color: #8398a3;
+}
+
+.password-toggle,
+.auth-switch button {
+    color: #168b7a;
+}
+
+.primary-button {
+    border-radius: 9px;
+    background: #168b7a;
+    box-shadow: 0 5px 13px rgb(22 139 122 / 14%);
+    font-family: inherit;
+}
+
+.primary-button:hover {
+    background: #117969;
+}
+
+.auth-switch {
+    color: #748797;
+}
+
+.security-note {
+    margin-top: 24px;
+    border: 1px solid #e5eeeb;
+    background: #f4f9f7;
+}
+
+.security-note p {
+    color: #70858f;
+}
+
+.condition-group {
+    border-color: #e1e9ed;
+    border-radius: 9px;
+}
+
+.condition-group legend,
+.condition-option span {
+    color: #3d5b6d;
+}
+
+.condition-option input[type="checkbox"] {
+    accent-color: #168b7a;
+}
+
+@media (max-width: 950px) {
+    .auth-page {
+        grid-template-columns: 1fr;
+    }
+
+    .brand-panel {
+        display: none;
+    }
+
+    .auth-panel {
+        min-height: 100vh;
+        padding: 22px;
+        background:
+            radial-gradient(circle at 90% 8%, #e7f5f1 0, transparent 35%),
+            #f4f8fb;
+    }
+
+    .auth-container {
+        width: min(500px, 100%);
+        padding: 32px clamp(23px, 6vw, 42px);
+    }
+
+    .mobile-brand {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        margin-bottom: 28px;
+    }
+
+    .mobile-logo {
+        display: flex;
+        width: 42px;
+        height: 42px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 13px;
+        background: #168b7a;
+        color: #fff;
+        font-size: 25px;
+        font-weight: 700;
+    }
+
+    .mobile-brand h2 {
+        color: #18364b;
+        font-size: 19px;
+    }
+
+    .mobile-brand p {
+        margin-top: 2px;
+        color: #83949f;
+        font-size: 10px;
+    }
+}
+
+@media (max-width: 500px) {
+    .auth-panel {
+        padding: 12px;
+    }
+
+    .auth-container {
+        padding: 24px 19px;
+        border-radius: 15px;
+    }
+
+    .auth-heading h2 {
+        font-size: 24px;
     }
 }

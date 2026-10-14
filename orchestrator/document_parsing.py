@@ -12,8 +12,8 @@ import base64
 # LangChain Google GenAI Integration
 from langchain_core.messages import HumanMessage, SystemMessage
 from schemas.doc_schema import LabReportData, PrescriptionData
-from services.prompts.data_parsing_prompt import LAB_REPORT_VISION_PROMPT, LAB_REPORT_TEXT_PROMPT ,PRESCRIPTION_VISION_PROMPT, PRESCRIPTION_TEXT_PROMPT 
-from services.ai_model import ai_Model
+from prompts.data_parsing_prompt import LAB_REPORT_VISION_PROMPT, LAB_REPORT_TEXT_PROMPT ,PRESCRIPTION_VISION_PROMPT, PRESCRIPTION_TEXT_PROMPT 
+from services.api_call import ai_Model
 # Type alias for combined document outputs
 ParsedMedicalDocument = Union[PrescriptionData, LabReportData]
 

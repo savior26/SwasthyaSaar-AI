@@ -11,9 +11,12 @@
 
     <title>SwasthyaSaar AI | Secure Healthcare</title>
 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link
         rel="stylesheet"
-        href="{{ url_for('static', path='css/auth.css') }}"
+        href="{{ url_for('static', path='css/auth.css') }}?v=20261014-unified-medical-ui"
     >
 </head>
 
@@ -124,7 +127,7 @@
                 </div>
 
                 <div>
-                    <h2>Swasthya<span>Saar</span></h2>
+                    <h2>Swasthya<span>Saar AI</span></h2>
                     <p>AI-Powered Health Companion</p>
                 </div>
 
@@ -450,15 +453,26 @@
                     <div class="form-group">
 
                         <label for="register-condition">
-                            Medical condition
+                            Medical conditions
                             <span>Optional</span>
                         </label>
 
-                        <textarea
-                            id="register-condition"
-                            rows="2"
-                            placeholder="e.g. Diabetes, Hypertension..."
-                        ></textarea>
+                        <div id="register-condition" class="condition-picker" aria-describedby="register-condition-hint">
+                            {% for group, conditions in medical_condition_groups %}
+                            <fieldset class="condition-group">
+                                <legend>{{ group }}</legend>
+                                {% for condition in conditions %}
+                                <label class="condition-option">
+                                    <input type="checkbox" name="medical_condition" value="{{ condition }}">
+                                    <span>{{ condition }}</span>
+                                </label>
+                                {% endfor %}
+                            </fieldset>
+                            {% endfor %}
+                        </div>
+                        <small id="register-condition-hint" class="multiselect-hint">
+                            Select all conditions that apply.
+                        </small>
 
                     </div>
 
@@ -605,7 +619,7 @@
 </div>
 
 
-<script src="{{ url_for('static', path='js/auth.js') }}"></script>
+<script src="{{ url_for('static', path='js/auth.js') }}?v=20261012-medical-condition-checkboxes"></script>
 
 </body>
 

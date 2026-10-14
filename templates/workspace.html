@@ -4,23 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SwasthyaSaar | {{ title }}</title>
-    <link rel="stylesheet" href="{{ url_for('static', path='css/workspace.css') }}?v=20261010-document-delete">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/workspace.css') }}?v=20261014-unified-medical-ui">
 </head>
 <body>
     <div class="workspace-shell">
         <aside class="workspace-sidebar">
-            <a class="workspace-brand" href="/">
-                <span class="brand-mark">+</span>
-                <span><strong>SwasthyaSaar</strong><small>Your health, organized</small></span>
+            <a class="workspace-brand" href="/" aria-label="SwasthyaSaar AI dashboard">
+                <span class="brand-mark" aria-hidden="true">+</span>
+                <span><strong>Swasthya<span class="workspace-brand-accent">Saar AI</span></strong><small>Your health, organized</small></span>
             </a>
             <nav aria-label="Main navigation">
-                <a href="/">Dashboard</a>
-                <a href="/profile" {% if page == "profile" or page == "profile-edit" %}aria-current="page"{% endif %}>My profile</a>
-                <a href="/lab-reports" {% if page == "lab-reports" %}aria-current="page"{% endif %}>Lab reports</a>
-                <a href="/medications" {% if page == "medications" %}aria-current="page"{% endif %}>Medications</a>
-                <a href="/documents" {% if page == "documents" %}aria-current="page"{% endif %}>Documents</a>
-                <a href="/symptom-summary" {% if page == "symptom-summary" %}aria-current="page"{% endif %}>Symptom summary</a>
-                <a href="/safety-alerts" {% if page == "safety-alerts" %}aria-current="page"{% endif %}>Safety alerts</a>
+                <a href="/"><span class="workspace-nav-icon" aria-hidden="true">⌂</span>Dashboard</a>
+                <a href="/health-trends" {% if page == "health-trends" %}aria-current="page"{% endif %}><span class="workspace-nav-icon" aria-hidden="true">⌁</span>Health trends</a>
+                <a href="/profile" {% if page == "profile" or page == "profile-edit" %}aria-current="page"{% endif %}><span class="workspace-nav-icon" aria-hidden="true">♙</span>My profile</a>
+                <a href="/lab-reports" {% if page == "lab-reports" %}aria-current="page"{% endif %}><span class="workspace-nav-icon" aria-hidden="true">♧</span>Lab reports</a>
+                <a href="/medications" {% if page == "medications" %}aria-current="page"{% endif %}><span class="workspace-nav-icon" aria-hidden="true">◈</span>Medications</a>
+                <a href="/documents" {% if page == "documents" %}aria-current="page"{% endif %}><span class="workspace-nav-icon" aria-hidden="true">▤</span>Documents</a>
+                <a href="/symptom-summary" {% if page == "symptom-summary" %}aria-current="page"{% endif %}><span class="workspace-nav-icon" aria-hidden="true">☊</span>Symptom summary</a>
+                <a href="/safety-alerts" {% if page == "safety-alerts" %}aria-current="page"{% endif %}><span class="workspace-nav-icon" aria-hidden="true">⚠</span>Safety alerts</a>
             </nav>
             <button class="secondary-button logout-button" id="logout-button" type="button">Sign out</button>
         </aside>
@@ -72,9 +76,38 @@
                 <form id="profile-form" class="form-grid">
                     <label>Name<input name="name" autocomplete="name" required maxlength="255"></label>
                     <label>Year of birth<input name="year_of_birth" type="number" min="1900" max="2100" inputmode="numeric"></label>
-                    <label>Blood group<input name="blood_group" maxlength="10"></label>
+                    <label>Blood group
+                        <select name="blood_group">
+                            <option value="">Select blood group</option>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                        </select>
+                    </label>
                     <label>Phone number<input name="phone_number" type="tel" autocomplete="tel" maxlength="20"></label>
-                    <label class="wide-field">Medical conditions<textarea name="medical_condition" rows="3"></textarea></label>
+                    <label class="wide-field">Medical conditions
+                        <div id="profile-medical-conditions" class="condition-picker" aria-describedby="profile-condition-hint">
+                            {% for group, conditions in medical_condition_groups %}
+                            <fieldset class="condition-group">
+                                <legend>{{ group }}</legend>
+                                {% for condition in conditions %}
+                                <label class="condition-option">
+                                    <input type="checkbox" name="medical_condition" value="{{ condition }}">
+                                    <span>{{ condition }}</span>
+                                </label>
+                                {% endfor %}
+                            </fieldset>
+                            {% endfor %}
+                        </div>
+                        <small id="profile-condition-hint" class="multiselect-hint">
+                            Select all conditions that apply.
+                        </small>
+                    </label>
                     <label class="wide-field">Allergies<textarea name="allergy" rows="3"></textarea></label>
                     <div class="form-actions wide-field">
                         <a class="secondary-button" href="/profile">Cancel</a>
@@ -233,6 +266,6 @@
         };
     </script>
     <script src="{{ url_for('static', path='js/patient_summary_reports.js') }}"></script>
-    <script src="{{ url_for('static', path='js/workspace.js') }}?v=20261010-document-delete"></script>
+    <script src="{{ url_for('static', path='js/workspace.js') }}?v=20261012-medical-condition-checkboxes"></script>
 </body>
 </html>

@@ -13,7 +13,7 @@ from schemas.patient_summary_schema import (
     PatientSummaryReportRecord,
     PatientSummaryResponse,
 )
-from agent.summary_agent_runtime import (
+from utils.symptom_summary.summary_agent_runtime import (
     PatientSummarySessionNotFound,
     get_completed_report,
     get_interview_session,
@@ -21,7 +21,7 @@ from agent.summary_agent_runtime import (
     process_answer,
     start_interview,
 )
-from services.patient_summary_pdf import create_patient_summary_pdf
+from utils.symptom_summary.patient_summary_pdf import create_patient_summary_pdf
 
 
 router = APIRouter(
