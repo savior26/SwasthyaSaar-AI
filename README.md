@@ -52,7 +52,7 @@ medication safety screening, and a guided symptom-summary interview.
 ├── settings.py            # Environment-backed application settings
 ├── requirements.txt       # Python dependencies
 ├── README.md              # Setup and project documentation
-└── PROJECT.TXT            # Hackathon project title and description
+           
 ```
 
 `main.py` creates the database tables at startup and includes the application
